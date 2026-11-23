@@ -1,0 +1,13 @@
+/node_modules
+/.next
+/out
+/build
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# 환경 변수 (절대 커밋하지 않음)
+.env*.local
+.env
+
+.vercel
