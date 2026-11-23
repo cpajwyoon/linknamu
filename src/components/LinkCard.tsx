@@ -1,35 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import type { LinkItem } from "@/data/profile";
 
 type Props = {
   link: LinkItem;
-  initialCount?: number;
+  count: number;
+  onClick: (id: string) => void;
 };
 
-function recordClick(id: string) {
-  const body = JSON.stringify({ id });
-  // 페이지를 떠나도 요청이 전송되도록 sendBeacon을 우선 사용합니다.
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon("/api/clicks", new Blob([body], { type: "application/json" }));
-  } else {
-    fetch("/api/clicks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-      keepalive: true,
-    }).catch(() => {});
-  }
-}
-
-export default function LinkCard({ link, initialCount }: Props) {
-  const [count, setCount] = useState(initialCount);
-
-  const handleClick = () => {
-    recordClick(link.id);
-    if (count !== undefined) setCount(count + 1);
-  };
+export default function LinkCard({ link, count, onClick }: Props) {
+  const handleClick = () => onClick(link.id);
 
   return (
     <a
@@ -51,14 +31,12 @@ export default function LinkCard({ link, initialCount }: Props) {
         )}
       </div>
       <div className="flex shrink-0 items-center gap-2">
-        {count !== undefined && (
-          <span
-            className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium tabular-nums text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400"
-            aria-label={`클릭 ${count}회`}
-          >
-            {count.toLocaleString("ko-KR")}
-          </span>
-        )}
+        <span
+          className="text-xs tabular-nums text-neutral-400 dark:text-neutral-500"
+          aria-label={`클릭 ${count}회`}
+        >
+          {count.toLocaleString("ko-KR")}회
+        </span>
         <svg
           aria-hidden="true"
           viewBox="0 0 20 20"
